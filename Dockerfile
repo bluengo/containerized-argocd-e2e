@@ -10,11 +10,10 @@ LABEL name="containerized-argocd-e2e" \
       description="A UBI-8 image with all the tools needed to run ArgoCD remote E2E tests"
 
 # Install dependencies
-RUN sudo dnf install -y \
+RUN dnf install -y \
     curl \
     gcc \
     git \
-    golang-sigs-k8s-kustomize \
     make \
     perl-Digest-SHA \
     tar \
@@ -32,15 +31,24 @@ RUN curl -sSL -o /tmp/oc.tar.gz \
     "https://mirror.openshift.com/pub/openshift-v4/${ARCH_X86}/clients/ocp/latest/openshift-client-linux.tar.gz" &&\
     tar -xzf /tmp/oc.tar.gz -C /usr/local/bin oc kubectl
 
+# Install Kustomize
+RUN curl -sSL \
+    "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" | bash
+
 # Install ArgoCD CLI
 RUN curl -sSL -o /usr/local/bin/argocd \
     "https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-${ARCH_AMD}" &&\
     chmod +x /usr/local/bin/argocd
 
-# Entrypoint
-ENTRYPOINT [ "git", \
-             "clone", \
-             "https://github.com/argoproj/argo-cd.git", \
-             "/tmp/argo-cd"
-]
+# Clone ArgoCD repo
+RUN git clone \
+    "https://github.com/argoproj/argo-cd.git" \
+    "/tmp/argo-cd"
 
+# Entrypoint
+CMD [ "git", \
+      "-C", \
+      "/tmp/argo-cd", \
+      "pull", \
+      "--rebase" \
+]
