@@ -20,23 +20,23 @@ RUN dnf install -y \
     unzip
 
 # Install Go 1.18
-RUN curl -sSL -o /tmp/golang.tar.gz \
+RUN curl -SL -o /tmp/golang.tar.gz \
     "https://go.dev/dl/go${GOLANG_VERSION}.linux-${ARCH_AMD}.tar.gz" &&\
     rm -rf /usr/local/go &&\
     tar -xzf /tmp/golang.tar.gz -C /usr/local
 #RUN export PATH=$PATH:/usr/local/go/bin
 
 # Install OC and Kubectl
-RUN curl -sSL -o /tmp/oc.tar.gz \
+RUN curl -SL -o /tmp/oc.tar.gz \
     "https://mirror.openshift.com/pub/openshift-v4/${ARCH_X86}/clients/ocp/latest/openshift-client-linux.tar.gz" &&\
     tar -xzf /tmp/oc.tar.gz -C /usr/local/bin oc kubectl
 
 # Install Kustomize
-RUN curl -sSL \
+RUN curl -SL \
     "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" | bash
 
 # Install ArgoCD CLI
-RUN curl -sSL -o /usr/local/bin/argocd \
+RUN curl -SL -o /usr/local/bin/argocd \
     "https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-${ARCH_AMD}" &&\
     chmod +x /usr/local/bin/argocd
 
