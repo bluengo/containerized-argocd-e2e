@@ -1,5 +1,7 @@
 FROM registry.access.redhat.com/ubi8/ubi:latest
+
 ARG GOLANG_VERSION="1.18.6"
+ARG OS_TYPE="linux"
 ARG ARCH_X86="x86_64"
 ARG ARCH_AMD="amd64"
 
@@ -33,8 +35,14 @@ RUN curl -SL -o /tmp/oc.tar.gz \
     tar -xzf /tmp/oc.tar.gz -C /usr/local/bin oc kubectl
 
 # Install Kustomize
-RUN curl -SL \
-    "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" | bash
+RUN curl -SL -o /tmp/kustomize.tar.gz \
+    $(curl -sSL \
+        "https://api.github.com/repos/kubernetes-sigs/kustomize/releases" \
+        | egrep "browser_download.*${OS_TYPE}.*${ARCH_AMD}" \
+        | egrep -o 'https://[^ "]+' \
+        | head -1 \
+    ) &&\
+    tar -xzf /tmp/kustomize.tar.gz -C /usr/local/bin
 
 # Install ArgoCD CLI
 RUN curl -SL -o /usr/local/bin/argocd \
