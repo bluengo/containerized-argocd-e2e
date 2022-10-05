@@ -24,7 +24,8 @@ RUN curl -SL -o /tmp/golang.tar.gz \
     "https://go.dev/dl/go${GOLANG_VERSION}.linux-${ARCH_AMD}.tar.gz" &&\
     rm -rf /usr/local/go &&\
     tar -xzf /tmp/golang.tar.gz -C /usr/local
-#RUN export PATH=$PATH:/usr/local/go/bin
+
+RUN echo 'export PATH=${PATH}:/usr/local/go/bin' >> /etc/bashrc
 
 # Install OC and Kubectl
 RUN curl -SL -o /tmp/oc.tar.gz \
