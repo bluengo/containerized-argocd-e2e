@@ -21,9 +21,9 @@ RUN dnf install -y \
     tar \
     unzip
 
-# Install Go 1.18
+# Install Go
 RUN curl -SL -o /tmp/golang.tar.gz \
-    "https://go.dev/dl/go${GOLANG_VERSION}.linux-${ARCH_AMD}.tar.gz" &&\
+    "https://go.dev/dl/go${GOLANG_VERSION}.${OS_TYPE}-${ARCH_AMD}.tar.gz" &&\
     rm -rf /usr/local/go &&\
     tar -xzf /tmp/golang.tar.gz -C /usr/local
 
@@ -31,7 +31,7 @@ RUN echo 'export PATH=${PATH}:/usr/local/go/bin' >> /etc/bashrc
 
 # Install OC and Kubectl
 RUN curl -SL -o /tmp/oc.tar.gz \
-    "https://mirror.openshift.com/pub/openshift-v4/${ARCH_X86}/clients/ocp/latest/openshift-client-linux.tar.gz" &&\
+    "https://mirror.openshift.com/pub/openshift-v4/${ARCH_X86}/clients/ocp/latest/openshift-client-${OS_TYPE}.tar.gz" &&\
     tar -xzf /tmp/oc.tar.gz -C /usr/local/bin oc kubectl
 
 # Install Kustomize
@@ -46,7 +46,7 @@ RUN curl -SL -o /tmp/kustomize.tar.gz \
 
 # Install ArgoCD CLI
 RUN curl -SL -o /usr/local/bin/argocd \
-    "https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-${ARCH_AMD}" &&\
+    "https://github.com/argoproj/argo-cd/releases/latest/download/argocd-${OS_TYPE}-${ARCH_AMD}" &&\
     chmod +x /usr/local/bin/argocd
 
 # Clone ArgoCD repo
